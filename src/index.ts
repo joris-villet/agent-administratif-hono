@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { bodyLimit } from 'hono/body-limit'
 import { logger } from 'hono/logger'
+import { secureHeaders } from 'hono/secure-headers'
 import { serveStatic } from 'hono/bun'
 
 const app = new Hono()
@@ -16,17 +17,19 @@ app.use('/*', cors({
   maxAge: 86400,
 }))
 app.use(bodyLimit({
-  maxSize: 10 * 1024 * 1024,
+  maxSize: 2 * 1024 * 1024,
   onError: (c) => {
     return c.text('overflow :(', 413)
   },
 }))
+app.use(secureHeaders())
 
 app.get('/', async (c) => {
   const file = Bun.file('./static/index.html')
   const page = await file.text();
   return c.html(page)
 })
+
 
 export default {
   port: 7000,
