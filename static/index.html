@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Agent Administratif</title>
+</head>
+<body>
+  
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0f1e;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+  }
+  .container {
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 0.5rem;
+  }
+  .letter {
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 700;
+    color: #00d4ff;
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(60px) rotate(-10deg);
+    animation: dropIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    letter-spacing: 0.05em;
+  }
+  .letter.space { width: 0.4em; }
+  .subtitle {
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    color: #4a9eff;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+    margin-top: 1rem;
+  }
+  .status {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .status-text {
+    font-size: 0.85rem;
+    color: #00ff88;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .content { position: relative; z-index: 1; }
+  @keyframes dropIn {
+    to { opacity: 1; transform: translateY(0) rotate(0deg); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+</style>
+<div class="grid-bg"></div>
+<div class="container content">
+  <div class="title" id="title"></div>
+  <div class="subtitle" id="sub" style="animation-delay: 1.8s"></div>
+  <div class="status" style="animation-delay: 2.2s">
+    <div class="dot"></div>
+    <span class="status-text">Server running</span>
+  </div>
+</div>
+<script>
+  const text = "AGENT ADMINISTRATIF";
+  const title = document.getElementById("title");
+  let delay = 0;
+  text.split("").forEach((char, _i) => {
+    const span = document.createElement("span");
+    if (char === " ") {
+      span.className = "letter space";
+      span.style.animationDelay = `${delay}s`;
+      span.innerHTML = "&nbsp;";
+    } else {
+      span.className = "letter";
+      span.textContent = char;
+      span.style.animationDelay = `${delay}s`;
+      delay += 0.07;
+    }
+    title.appendChild(span);
+  });
+  document.getElementById("sub").textContent = "Fastify · Vaultwarden · Telegram";
+  document.getElementById("sub").style.animationDelay = `${delay + 0.3}s`;
+  document.querySelector(".status").style.animationDelay = `${delay + 0.7}s`;
+</script>
+</body>
+</html>
