@@ -5,10 +5,11 @@ import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { serveStatic } from 'hono/bun'
 import type { Env } from './types/env'
-import { sessionMiddleware } from './middleware/auth'
+import { sessionMiddleware } from './middleware/session'
 import { seedAdmin } from '@/db/seed'
 import betterAuth from "./routes/auth"
 import agentRoutes from "./routes/agent"
+import threadRoutes from "./routes/thread"
 
 const app = new Hono<Env>()
 
@@ -32,14 +33,14 @@ app.use("*", sessionMiddleware)
 
 app.route("/api/auth/*", betterAuth)
 app.route("/api/agent", agentRoutes)
+app.route("/api/thread", threadRoutes)
 
+// Welcome server
 app.get('/', async (c) => {
-  console.log('session ? ', c.get('session'))
   const file = Bun.file('./static/index.html')
   const page = await file.text();
   return c.html(page)
-})
-
+});
 
 const startServer = async () => {
   console.log('🌱 Seeding admin...')
