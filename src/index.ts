@@ -5,16 +5,9 @@ import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { serveStatic } from 'hono/bun'
 import { auth } from './lib/auth'
-import type { User, Session } from 'better-auth/db'
-// import { seedAdmin } from '@/db/seed'
+import type { Env } from './types/env'
+import { seedAdmin } from '@/db/seed'
 
-
-type Env = {
-  Variables: {
-    user: User | null
-    session: Session | null
-  }
-}
 
 const app = new Hono<Env>()
 
@@ -63,7 +56,21 @@ app.get('/', async (c) => {
   return c.html(page)
 })
 
-export default {
-  port: 7000,
-  fetch: app.fetch,
-} 
+
+const startServer = async () => {
+  console.log('🌱 Seeding admin...')
+  await seedAdmin()
+
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 7000
+  const server = Bun.serve({
+    port,
+    fetch: app.fetch,
+  })
+
+  console.log(`🚀 Server ready on ${server.url}`)
+}
+
+startServer().catch((err) => {
+  console.error('❌ startServer crashed:', err)
+  process.exit(1)
+})
