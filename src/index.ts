@@ -4,10 +4,11 @@ import { bodyLimit } from 'hono/body-limit'
 import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { serveStatic } from 'hono/bun'
-import { auth } from './lib/auth'
 import type { Env } from './types/env'
+import { sessionMiddleware } from './middleware/auth'
 import { seedAdmin } from '@/db/seed'
-
+import betterAuth from "./routes/auth"
+import agentRoutes from "./routes/agent"
 
 const app = new Hono<Env>()
 
@@ -27,30 +28,13 @@ app.use(bodyLimit({
   },
 }))
 app.use(secureHeaders())
+app.use("*", sessionMiddleware)
 
-app.use("*", async (c, next) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
-
-  console.log('session => ', session)
-
-  if (!session) {
-    c.set("user", null);
-    c.set("session", null);
-    await next();
-    return;
-  }
-
-  c.set("user", session.user);
-  c.set("session", session.session);
-  await next();
-});
-
-app.on(["POST", "GET"], "/api/auth/*", (c) => {
-  return auth.handler(c.req.raw);
-});
+app.route("/api/auth/*", betterAuth)
+app.route("/api/agent", agentRoutes)
 
 app.get('/', async (c) => {
-  //console.log('session ? ', c.get('session'))
+  console.log('session ? ', c.get('session'))
   const file = Bun.file('./static/index.html')
   const page = await file.text();
   return c.html(page)
