@@ -1,5 +1,5 @@
 {
-  "id": "916615e1-a7aa-4e31-8409-c79b28427a6d",
+  "id": "416a1e80-02bf-45d4-95d2-07ee30eeb623",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -655,7 +655,7 @@
           "name": "user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -684,7 +684,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

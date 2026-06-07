@@ -3,6 +3,7 @@ import { ChatOpenAI } from '@langchain/openai'
 import { createAgent } from 'langchain'
 import { promptSystem } from './prompt-system'
 import { allTools } from './tools/allTools'
+import { ChatOllama } from "@langchain/ollama"
 
 let checkpointer: PostgresSaver
 
@@ -20,22 +21,29 @@ export const setAgent = async () => {
   const apiKey = process.env.OPENROUTER_API_KEY as string
   console.log('[agent] model:', modelName, '| key:', apiKey ? `SET (${apiKey.slice(0, 8)}...)` : 'MISSING')
 
-  const model = new ChatOpenAI({
-    modelName,
-    apiKey,
-    temperature: 0.7,
-    maxTokens: 2000,
-    timeout: 300000,
-    configuration: {
-      baseURL: 'https://openrouter.ai/api/v1',
-    },
-  })
-
   // const model = new ChatOpenAI({
-  //   baseURL: "http://localhost:1234/v1",
-  //   apiKey: "lm-studio", // n'importe quoi, juste requis
-  //   model: "qwen2.5-coder-7b-instruct", // le nom exact affiché dans LM Studio
+  //   modelName,
+  //   apiKey,
+  //   temperature: 0.7,
+  //   maxTokens: 2000,
+  //   timeout: 300000,
+  //   configuration: {
+  //     baseURL: 'https://openrouter.ai/api/v1',
+  //   },
   // })
+
+  const model = new ChatOpenAI({
+    modelName: "gemma3:1b",        // Nom arbitraire, LM Studio l'ignore
+    temperature: 0.7,
+    //maxTokens: 2000,
+    timeout: 300000,
+    apiKey: "not-needed",      // Clé bidon, l'API locale n'en a pas besoin
+    configuration: {
+      baseURL: "http://localhost:11434/v1",
+    },
+  });
+
+
 
   if (!checkpointer) {
     console.log('[agent] Initializing PostgresSaver with DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'MISSING')

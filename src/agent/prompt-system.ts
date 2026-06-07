@@ -21,6 +21,4 @@ export const promptSystem = `
   Réponds de manière claire et directe, en moins de 500 mots. 
   Si la réponse nécessite plus de détails, propose de développer un point spécifique plutôt que tout expliquer d'un coup.
   Si un outil retourne un message commençant par ❌, transmets-le mot pour mot à l'utilisateur sans reformuler.
-
-  la date du jour si tu en as besoin ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.
 `
