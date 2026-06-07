@@ -110,7 +110,12 @@ app
             eq(conversationMessages.role, 'user')
           )
         )
-        .fullJoin(conversationMessages, eq(conversations.id, conversationMessages.conversationId))
+        .fullJoin(conversationMessages,
+          and(
+            eq(conversations.id, conversationMessages.conversationId),
+            eq(conversationMessages.role, 'user')
+          )
+        )
         .orderBy(desc(conversations.id))
         .limit(10)
 

@@ -10,6 +10,7 @@ import { seedAdmin } from '@/db/seed'
 import betterAuth from "./routes/auth"
 import agentRoutes from "./routes/agent"
 import threadRoutes from "./routes/thread"
+import conversationRoutes from "./routes/conversation"
 
 const app = new Hono<Env>()
 
@@ -34,6 +35,7 @@ app.use("*", sessionMiddleware)
 app.route("/api/auth/*", betterAuth)
 app.route("/api/agent", agentRoutes)
 app.route("/api/thread", threadRoutes)
+app.route('/api/conversation', conversationRoutes)
 
 // Welcome server
 app.get('/', async (c) => {
