@@ -5,7 +5,7 @@ import * as z from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { db } from '@/db';
 import { conversationMessages, conversations } from '@/db/schema';
-import { desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
 const app = new Hono<Env>();
 
@@ -25,24 +25,96 @@ app
 
     try {
 
-      const allConversations = await db.select().from(conversations).orderBy(desc(conversations.id)).limit(50)
+      const user = c.get('user');
 
-      const convoIds = allConversations.map((c) => c.id)
+      if (!user) {
+        return c.json({ error: 'Unauthorized' }, 401)
+      }
 
-      const allMessages = convoIds.length
-        ? await db
-          .select()
-          .from(conversationMessages)
-          .where(inArray(conversationMessages.conversationId, convoIds))
-          .orderBy(conversationMessages.id)
-        : []
+      // const allConversations = await db.select().from(conversations).orderBy(desc(conversations.id)).limit(50)
 
-      const result = allConversations.map((convo) => ({
-        ...convo,
-        messages: allMessages.filter((m) => m.conversationId === convo.id),
-      }))
+      // const convoIds = allConversations.map((c) => c.id)
 
-      return c.json(result, 200)
+      // const allMessages = convoIds.length
+      //   ? await db
+      //     .select()
+      //     .from(conversationMessages)
+      //     .where(inArray(conversationMessages.conversationId, convoIds))
+      //     .orderBy(conversationMessages.id)
+      //   : []
+
+      // const result = allConversations.map((convo) => ({
+      //   ...convo,
+      //   messages: allMessages.filter((m) => m.conversationId === convo.id),
+      // }))
+
+      // return c.json(result, 200)
+
+      // const allConversations = await db
+      //   .select()
+      //   .from(conversations)
+      //   .orderBy(desc(conversations.id))
+      //   .limit(50)
+
+      // const convoIds = allConversations.map(c => c.id)
+
+      // const firstMessages = convoIds.length
+      //   ? await db
+      //     .select()
+      //     .from(conversationMessages)
+      //     .where(
+      //       and(
+      //         inArray(conversationMessages.conversationId, convoIds),
+      //         sql`${conversationMessages.id} IN (
+      //     SELECT MIN(id) FROM ${conversationMessages}
+      //     WHERE ${conversationMessages.conversationId} IN ${convoIds}
+      //     GROUP BY ${conversationMessages.conversationId}
+      //   )`
+      //       )
+      //     )
+      //   : []
+
+      // const messagesByConvo = new Map(firstMessages.map(m => [m.conversationId, m]))
+      // const result = allConversations.map(convo => ({
+      //   ...convo,
+      //   firstMessage: messagesByConvo.get(convo.id) ?? null,
+      // }))
+
+      // const threads = await db.select()
+      //   .from(conversations)
+      //   .where(eq(conversations.userId, user.id))
+      //   .orderBy(desc(conversations.id))
+      //   .limit(10)
+
+      // const messages = await db
+      //   .select({ 
+      //     id: conversationMessages.id,
+      //     content: conversationMessages.content
+      //   })
+      //   .from(conversationMessages)
+      //   .where(eq(conversationMessages.role, 'user'))
+
+      // const messagesId = messages.map(m => m.id);
+      const result = await db
+        .select({
+          id: conversations.id,
+          threadId: conversations.threadId,
+          title: conversations.title,
+          createdAt: conversations.createdAt,
+          threadFirstContent: conversationMessages.content
+        })
+        .from(conversations)
+        .where(
+          and(
+            eq(conversations.userId, user.id),
+            eq(conversationMessages.role, 'user')
+          )
+        )
+        .fullJoin(conversationMessages, eq(conversations.id, conversationMessages.conversationId))
+        .orderBy(desc(conversations.id))
+        .limit(10)
+
+      return c.json(result, 200);
 
     } catch (error) {
       console.error('ERREUR agentHandler =>', error)
