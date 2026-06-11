@@ -39,11 +39,6 @@ app
           )
         )
 
-      // const conversations = await db
-      //   .select()
-      //   .from(conversationMessages)
-      //   .where(eq(conversationMessages.conversationId, body.conversationId))
-
       return c.json(result, 200)
 
     } catch (error) {
