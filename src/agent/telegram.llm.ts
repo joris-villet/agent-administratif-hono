@@ -1,22 +1,15 @@
 import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 import { ChatOpenAI } from "@langchain/openai";
 import { createAgent } from "langchain";
+import { initChatModel } from "langchain";
 import { promptSystem } from "./prompt-system";
 import { allTools } from "./tools/allTools";
 
 let checkpointer: PostgresSaver;
 
-// const resolveApiKey = (): string | undefined => {
-//   const raw = process.env.OPENROUTER_API_KEY
-
-//   if (!raw) return undefined;
-
-//   return raw.trim().replace(/^Bearer\s+/i, "");
-// };
-
 export const setAgent = async () => {
   const modelName = process.env.LLM_NAME as string;
-  // const apiKey = resolveApiKey();
+
   const apiKey = process.env.OPENROUTER_API_KEY as string;
   console.log(
     "[agent] model:",
@@ -25,6 +18,8 @@ export const setAgent = async () => {
     apiKey ? `SET (${apiKey.slice(0, 8)}...)` : "MISSING"
   );
 
+  const llmLocal = "hf.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF:Q4_K_M";
+
   // const model = new ChatOpenAI({
   //   modelName,
   //   apiKey,
@@ -32,16 +27,15 @@ export const setAgent = async () => {
   //   maxTokens: 2000,
   //   timeout: 300000,
   //   configuration: {
-  //     baseURL: 'https://openrouter.ai/api/v1',
+  //     baseURL: "https://openrouter.ai/api/v1",
   //   },
-  // })
+  // });
 
   const model = new ChatOpenAI({
-    modelName: "gemma3:1b", // Nom arbitraire, LM Studio l'ignore
+    modelName: llmLocal,
     temperature: 0.7,
-    //maxTokens: 2000,
     timeout: 300000,
-    apiKey: "not-needed", // Clé bidon, l'API locale n'en a pas besoin
+    apiKey: "not-needed",
     configuration: {
       baseURL: "http://localhost:11434/v1",
     },

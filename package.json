@@ -2,6 +2,7 @@
   "name": "agent-administratif-hono",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
+    "dev:telegram": "bun run scripts/set-webhook-telegram.ts",
     "clean": "rm -rf dist && echo 'Done.'",
     "auth:generate": "bunx auth@latest generate",
     "db:generate": "bunx drizzle-kit generate",
@@ -12,6 +13,7 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.8.0",
+    "@langchain/langgraph-checkpoint-postgres": "^1.0.3",
     "@langchain/ollama": "^1.2.7",
     "@langchain/openai": "^1.4.7",
     "better-auth": "^1.6.14",
