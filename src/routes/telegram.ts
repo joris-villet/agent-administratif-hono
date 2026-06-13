@@ -1,15 +1,10 @@
 import { Hono } from "hono";
 import type { Env } from "@/types/env";
 import { sendMessage } from "@/utils/telegram/sendMessage";
-// import { setAgent } from "@/agent/telegram.llm";
 import { setAgent } from "@/agent/telegram.llm";
 import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { HumanMessage } from "langchain";
-// import { zValidator } from "@hono/zod-validator";
-// import { db } from "@/db";
-// import { conversationMessages, conversations } from "@/db/schema";
-// import { and, desc, eq, inArray, sql } from "drizzle-orm";
 
 const schemaTelegram = z.object({
   update_id: z.number(),
@@ -64,9 +59,54 @@ const schemaTelegram = z.object({
 
 const app = new Hono<Env>();
 
+// app.post("/message", zValidator("json", schemaTelegram), async (c) => {
+//   try {
+//     console.log("req json", c.req.json());
+//     const body = c.req.valid("json");
+//     const headers = c.req.header();
+//     // console.log("headers => ", headers);
+
+//     const telegramBotApiToken: string | undefined = headers[
+//       "x-telegram-bot-api-secret-token"
+//     ] as string;
+
+//     if (process.env.TELEGRAM_SECRET !== telegramBotApiToken) {
+//       return c.json("No authorized", 400);
+//     }
+
+//     console.log("body telegram => ", body);
+
+//     const userMessage = body.message.text;
+//     const chatId = process.env.TELEGRAM_CHAT_ID;
+//     console.log("user message => ", userMessage);
+
+//     const agent = setAgent();
+//     const humanMessage = new HumanMessage({ content: body.message.text });
+
+//     const responseAgent = (await agent).invoke(
+//       { messages: humanMessage },
+//       { configurable: { thread_id: body.message.chat.id } }
+//     );
+
+//     const aiMessage = (await responseAgent).messages.at(-1)?.content;
+//     console.log("messages length  => ", (await responseAgent).messages.length);
+//     console.log("messages => ", (await responseAgent).messages);
+
+//     if (aiMessage) {
+//       await sendMessage(chatId, aiMessage);
+//     }
+
+//     return c.json("ok", 200);
+//   } catch (err) {
+//     return c.json(err);
+//   }
+// })
+
 app.post("/message", zValidator("json", schemaTelegram), async (c) => {
   try {
+    // const body = await c.req.json();
     const body = c.req.valid("json");
+    console.log("body validator => ", body);
     const headers = c.req.header();
     // console.log("headers => ", headers);
 
@@ -78,7 +118,7 @@ app.post("/message", zValidator("json", schemaTelegram), async (c) => {
       return c.json("No authorized", 400);
     }
 
-    console.log("body telegram => ", body);
+    // console.log("body telegram => ", body);
 
     const userMessage = body.message.text;
     const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -92,13 +132,15 @@ app.post("/message", zValidator("json", schemaTelegram), async (c) => {
       { configurable: { thread_id: body.message.chat.id } }
     );
 
-    const aiMessage = (await responseAgent).messages.at(-1)?.content!;
-    console.log("messages length  => ", (await responseAgent).messages);
-    //console.log("AImessage => ", aiMessage);
+    const aiMessage = (await responseAgent).messages.at(-1)?.content;
+    console.log("messages length  => ", (await responseAgent).messages.length);
+    console.log("messages => ", (await responseAgent).messages);
 
-    const response = await sendMessage(chatId, aiMessage);
+    if (aiMessage) {
+      await sendMessage(chatId, aiMessage);
+    }
 
-    return c.json(response);
+    return c.json("ok", 200);
   } catch (err) {
     return c.json(err);
   }

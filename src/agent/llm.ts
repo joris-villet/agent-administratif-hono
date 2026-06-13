@@ -6,18 +6,10 @@ import { allTools } from "./tools/allTools";
 
 let checkpointer: PostgresSaver;
 
-// const resolveApiKey = (): string | undefined => {
-//   const raw = process.env.OPENROUTER_API_KEY
-
-//   if (!raw) return undefined;
-
-//   return raw.trim().replace(/^Bearer\s+/i, "");
-// };
-
 export const setAgent = async () => {
   const modelName = process.env.LLM_NAME as string;
-  // const apiKey = resolveApiKey();
   const apiKey = process.env.OPENROUTER_API_KEY as string;
+
   console.log(
     "[agent] model:",
     modelName,
@@ -25,25 +17,14 @@ export const setAgent = async () => {
     apiKey ? `SET (${apiKey.slice(0, 8)}...)` : "MISSING"
   );
 
-  // const model = new ChatOpenAI({
-  //   modelName,
-  //   apiKey,
-  //   temperature: 0.7,
-  //   maxTokens: 2000,
-  //   timeout: 300000,
-  //   configuration: {
-  //     baseURL: 'https://openrouter.ai/api/v1',
-  //   },
-  // })
-
   const model = new ChatOpenAI({
-    modelName: "gemma3:1b", // Nom arbitraire, LM Studio l'ignore
+    modelName,
+    apiKey,
     temperature: 0.7,
-    //maxTokens: 2000,
+    maxTokens: 2000,
     timeout: 300000,
-    apiKey: "not-needed", // Clé bidon, l'API locale n'en a pas besoin
     configuration: {
-      baseURL: "http://localhost:11434/v1",
+      baseURL: "https://openrouter.ai/api/v1",
     },
   });
 
@@ -61,7 +42,7 @@ export const setAgent = async () => {
 
   return createAgent({
     model,
-    tools: allTools,
+    tools: [...allTools],
     systemPrompt: promptSystem,
     checkpointer,
   });

@@ -1,41 +1,12 @@
-import { resolve } from "bun";
-
 const secretToken = process.env.TELEGRAM_SECRET;
 let ngrokUrl: string = "";
 
-// async function startServer(): Promise<void | boolean> {
-//   try {
-//     const proc = Bun.spawn(["bun", "run", "dev"], {
-//       //stdout: "inherit",
-//       stdout: "pipe",
-//     });
-
-//     // await proc.stdout.text()
-//     const text = await new Response(proc.stdout).text();
-//     console.log("text => ", text);
-
-//     return new Promise((resolve) => {
-//       let timer = setInterval(async () => {
-//         try {
-//           const res = await fetch("http://localhost:7000/ping");
-//           if (res.ok) {
-//             //console.log("server ready => ", res.ok);
-//             clearInterval(timer);
-//             resolve(true);
-//           }
-//         } catch (error) {
-//           console.log("server not ready");
-//         }
-//       }, 500);
-//     });
-//   } catch (error) {
-//     console.log("error startServer => ", error);
-//   }
-// }
 async function startServer(): Promise<boolean> {
   Bun.spawn(["bun", "run", "dev"], {
     stdout: "inherit",
   });
+
+  await Bun.sleep(4000);
 
   return new Promise((resolve) => {
     const check = async () => {
@@ -61,7 +32,7 @@ async function setNgrokUrl(): Promise<string | undefined> {
     let webhookUrl: string = "";
 
     Bun.spawn(["ngrok", "http", "7000"], {
-      stdout: "ignore", // ou "inherit" si tu veux voir les logs
+      stdout: "ignore",
       stderr: "ignore",
     });
 
