@@ -38,7 +38,10 @@ async function setNgrokUrl(): Promise<string | undefined> {
 
     await Bun.sleep(3000);
 
-    const res = await fetch("http://127.0.0.1:4040/api/tunnels");
+    const res = (await fetch("http://127.0.0.1:4040/api/tunnels")) as Record<
+      string,
+      any
+    >;
     const data = await res.json();
     //console.log("data => ", data);
 
@@ -70,7 +73,7 @@ async function setWebhookUrl(webhookUrl: string): Promise<void | string> {
     const data = await res.json();
     //console.log("response webhook telegram => ", data);
     return new Promise((resolve) => {
-      if (data.ok) resolve(webhookUrl);
+      if (data) resolve(webhookUrl);
     });
   } catch (error) {
     console.log("err set webhook url => ", error);
