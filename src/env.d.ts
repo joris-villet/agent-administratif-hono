@@ -1,6 +1,8 @@
 declare namespace Bun {
   interface Env {
     readonly NODE_ENV: "development" | "production" | "test";
+    readonly CLOUD_LLM: string;
+    readonly LOCAL_LLM: string;
     readonly DATABASE_URL: string;
     readonly TELEGRAM_BOT_TOKEN: string;
     readonly TELEGRAM_SECRET: string;

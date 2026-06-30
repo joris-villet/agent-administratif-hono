@@ -8,9 +8,9 @@ import { allTools } from "./tools/allTools";
 // let checkpointer: PostgresSaver;
 
 export const setAgent = async () => {
-  const modelName = process.env.LLM_NAME as string;
-
+  const modelName = process.env.CLOUD_LLM as string;
   const apiKey = process.env.OPENROUTER_API_KEY as string;
+
   console.log(
     "[agent] model:",
     modelName,
