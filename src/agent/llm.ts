@@ -7,26 +7,33 @@ import { allTools } from "./tools/allTools";
 let checkpointer: PostgresSaver;
 
 export const setAgent = async () => {
-  const modelName = process.env.LLM_NAME as string;
-  const apiKey = process.env.OPENROUTER_API_KEY as string;
-
-  console.log(
-    "[agent] model:",
-    modelName,
-    "| key:",
-    apiKey ? `SET (${apiKey.slice(0, 8)}...)` : "MISSING"
-  );
+  // console.log(
+  //   "[agent] model:",
+  //   localLLM,
+  //   "| key:",
+  //   apiKey ? `SET (${apiKey.slice(0, 8)}...)` : "MISSING"
+  // );
 
   const model = new ChatOpenAI({
-    modelName,
-    apiKey,
+    modelName: process.env.CLOUD_LLM as string,
+    apiKey: process.env.OPENROUTER_API_KEY as string,
     temperature: 0.7,
-    maxTokens: 2000,
+    //maxTokens: 2000,
     timeout: 300000,
     configuration: {
       baseURL: "https://openrouter.ai/api/v1",
     },
   });
+
+  // const model = new ChatOpenAI({
+  //   modelName: localLLM,
+  //   temperature: 0.7,
+  //   timeout: 300000,
+  //   apiKey: "not-needed",
+  //   configuration: {
+  //     baseURL: "http://localhost:11434/v1",
+  //   },
+  // });
 
   if (!checkpointer) {
     console.log(
