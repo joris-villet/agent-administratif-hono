@@ -3,6 +3,10 @@ import { db } from "@/db/index";
 import { user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
+import 'dotenv/config';
+
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'MISSING');
+
 export const seedAdmin = async () => {
   const email = process.env.ADMIN_EMAIL;
   if (!email) throw new Error("ADMIN_EMAIL is not set in .env");

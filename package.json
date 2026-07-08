@@ -1,23 +1,27 @@
 {
   "name": "agent-administratif-hono",
+  "main": "./src/index.ts",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "dev:telegram": "bun run scripts/set-webhook-telegram.ts",
-    "dev:vault": "bun run scripts/dev/vaultwarden.ts",
+    "dev": "tsx watch src/index.ts",
+    "dev:telegram": "tsx scripts/set-webhook-telegram.ts",
+    "dev:vault": "tsx scripts/dev/vaultwarden.ts",
     "clean": "rm -rf dist && echo 'Done.'",
-    "auth:generate": "bunx auth@latest generate",
-    "db:generate": "bunx drizzle-kit generate",
-    "db:check": "bunx drizzle-kit check",
-    "db:migrate": "bunx drizzle-kit migrate",
-    "db:push": "bunx drizzle-kit push",
-    "db:studio": "bunx drizzle-kit studio"
+    "auth:generate": "npx auth@latest generate",
+    "db:generate": "npx drizzle-kit generate",
+    "db:check": "npx drizzle-kit check",
+    "db:migrate": "npx drizzle-kit migrate",
+    "db:push": "npx drizzle-kit push",
+    "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
+    "@hono/node-server": "^2.0.8",
     "@hono/zod-validator": "^0.8.0",
     "@langchain/langgraph-checkpoint-postgres": "^1.0.3",
     "@langchain/openai": "^1.4.7",
+    "@neondatabase/serverless": "^1.1.0",
     "@spawn/docker": "npm:@jsr/spawn__docker",
     "better-auth": "^1.6.14",
+    "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.23",
     "langchain": "^1.4.4",
@@ -26,8 +30,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "drizzle-kit": "^0.31.10"
+    "@types/node": "^26.1.1",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.23.0"
   },
   "module": "src/index.ts",
   "type": "module",
