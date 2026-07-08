@@ -133,7 +133,7 @@ const startServer = async () => {
 
   const { serve } = await import("@hono/node-server");
   const port = process.env.PORT ? parseInt(process.env.PORT) : 7000;
-  serve({ fetch: app.fetch, port }, (info) => {
+  serve({ fetch: app.fetch, port, hostname: "0.0.0.0" }, (info) => {
     console.log(`🚀 Server ready on http://localhost:${info.port}`);
   });
 };
