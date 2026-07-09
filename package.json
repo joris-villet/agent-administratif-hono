@@ -3,7 +3,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "set:telegram": "tsx scripts/set-webhook-telegram.ts",
+    "set:telegram:dev": "tsx scripts/telegram/set-dev-webhook.ts",
+    "set:telegram:prod": "tsx scripts/telegram/set-prod-webhook.ts",
     "dev:vault": "tsx scripts/dev/vaultwarden.ts",
     "clean": "rm -rf dist && echo 'Done.'",
     "auth:generate": "npx auth@latest generate",
@@ -26,6 +27,7 @@
     "hono": "^4.12.23",
     "langchain": "^1.4.4",
     "node-fetch": "^3.3.2",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.21.0",
     "shelljs": "^0.10.0",
     "zod": "^4.4.3"
