@@ -114,10 +114,10 @@ app.use(
 app.use(secureHeaders());
 app.use("*", sessionMiddleware);
 
-app.route("/api/auth/*", betterAuth);
-app.route("/api/agent", agentRoutes);
-app.route("/api/thread", threadRoutes);
-app.route("/api/conversation", conversationRoutes);
+// app.route("/api/auth/*", betterAuth);
+// app.route("/api/agent", agentRoutes);
+// app.route("/api/thread", threadRoutes);
+// app.route("/api/conversation", conversationRoutes);
 app.route("/api/telegram", telegramRoutes);
 
 app.get("/", async (c) => {

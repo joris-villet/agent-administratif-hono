@@ -102,19 +102,25 @@
 
 
 import fetch from "node-fetch";
+import 'dotenv/config'
 
 const botToken = process.env.TELEGRAM_BOT_TOKEN;
 const secretToken = process.env.TELEGRAM_SECRET;
 
+console.log("botToken => ", botToken);
+console.log("secretToken => ", secretToken);
+
 // L’URL publique de ton serveur
-const PUBLIC_URL = "https://agent.solidweb.fr/api/telegram/message";
+const BASE_URL = "https://agent.solidweb.fr";
+const TELEGRAM_ENDPOINT = "https://agent.solidweb.fr/api/telegram/message";
+//const PUBLIC_URL = "http://127.0.0.1:7000/api/telegram/message";
 
 // Vérifie que ton serveur Hono est prêt
 async function waitForServer() {
   return new Promise((resolve) => {
     const check = async () => {
       try {
-        const res = await fetch("http://localhost:7000/ping");
+        const res = await fetch(`${BASE_URL}/ping`);
         if (res.ok) {
           console.log("✅ Server ready");
           resolve(true);
@@ -130,7 +136,7 @@ async function waitForServer() {
 // Set webhook Telegram
 async function setWebhook() {
   try {
-    const url = `https://api.telegram.org/bot${botToken}/setWebhook?url=${PUBLIC_URL}`;
+    const url = `https://api.telegram.org/bot${botToken}/setWebhook?url=${TELEGRAM_ENDPOINT}`;
 
     const res = await fetch(url, {
       method: "POST",
@@ -142,7 +148,7 @@ async function setWebhook() {
     console.log("📡 Telegram response:", data);
 
     if (data.ok) {
-      console.log("🚀 Webhook set:", PUBLIC_URL);
+      console.log("🚀 Webhook set:", TELEGRAM_ENDPOINT);
     } else {
       console.log("❌ Failed to set webhook");
     }

@@ -101,6 +101,9 @@ const app = new Hono<Env>();
 //     return c.json(err);
 //   }
 // })
+app.get("/message", async (c) => {
+  return c.json("ok", 200);
+})
 
 app.post("/message", zValidator("json", schemaTelegram), async (c) => {
   try {
@@ -121,7 +124,7 @@ app.post("/message", zValidator("json", schemaTelegram), async (c) => {
     // console.log("body telegram => ", body);
 
     const userMessage = body.message.text;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const chatId = process.env.TELEGRAM_CHAT_ID!;
     console.log("user message => ", userMessage);
 
     const agent = setAgent();
