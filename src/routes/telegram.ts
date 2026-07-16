@@ -110,14 +110,16 @@ app.post("/message", async (c) => {
 
     const humanMessage = new HumanMessage({ content: body.message.text });
 
-    const responseAgent = (await agent).invoke(
+    console.log("🔄 Invoking agent...");
+    const responseAgent = await (await agent).invoke(
       { messages: humanMessage },
       { configurable: { thread_id: chatId } }
     );
+    console.log("✅ Agent response received");
 
-    const aiMessage = (await responseAgent).messages.at(-1)?.content;
-    console.log("messages length  => ", (await responseAgent).messages.length);
-    console.log("messages => ", (await responseAgent).messages);
+    const aiMessage = responseAgent.messages.at(-1)?.content;
+    console.log("messages length  => ", responseAgent.messages.length);
+    console.log("aiMessage => ", aiMessage);
 
     if (aiMessage) {
       await sendMessage(chatId, aiMessage);
