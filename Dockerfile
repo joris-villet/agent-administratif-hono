@@ -4,7 +4,7 @@ FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
 # Copier uniquement les fichiers nécessaires
-COPY package.json bun.lockb* ./
+COPY package.json bun.lock* ./
 
 # Installer les deps avec bun
 RUN bun install
@@ -21,7 +21,7 @@ FROM oven/bun:1-alpine
 WORKDIR /app
 
 # Copier uniquement les deps prod
-COPY package.json bun.lockb* ./
+COPY package.json bun.lock* ./
 RUN bun install --production
 
 # Copier le build depuis le stage builder
