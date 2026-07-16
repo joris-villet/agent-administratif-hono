@@ -111,11 +111,18 @@ app.post("/message", async (c) => {
     const humanMessage = new HumanMessage({ content: body.message.text });
 
     console.log("🔄 Invoking agent...");
-    const responseAgent = await (await agent).invoke(
-      { messages: humanMessage },
-      { configurable: { thread_id: chatId } }
-    );
-    console.log("✅ Agent response received");
+    let responseAgent;
+    try {
+      responseAgent = await (await agent).invoke(
+        { messages: humanMessage },
+        { configurable: { thread_id: chatId } }
+      );
+      console.log("✅ Agent response received");
+    } catch (agentError) {
+      console.error("❌ Agent error:", agentError);
+      await sendMessage(chatId, "❌ Erreur agent: " + String(agentError));
+      return c.json({ error: String(agentError) }, 500);
+    }
 
     const aiMessage = responseAgent.messages.at(-1)?.content;
     console.log("messages length  => ", responseAgent.messages.length);
