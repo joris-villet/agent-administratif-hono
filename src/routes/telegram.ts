@@ -8,59 +8,7 @@ import { HumanMessage } from "langchain";
 import type { FileInfo } from '@/interfaces/telegram'
 import ky from 'ky'
 
-// const schemaTelegram = z.object({
-//   update_id: z.number(),
-//   message: z.object({
-//     message_id: z.number(),
-//     from: z.object({
-//       id: z.number(),
-//       is_bot: z.boolean(),
-//       first_name: z.string(),
-//       language_code: z.string(),
-//     }),
-//     chat: z.object({
-//       id: z.number(),
-//       first_name: z.string(),
-//       type: z.string(),
-//     }),
-//     date: z.number(),
-//     text: z.string(),
-//     document: z
-//       .object({
-//         file_name: z.string(),
-//         mime_type: z.string(),
-//         file_id: z.string(),
-//         file_unique_id: z.string(),
-//         file_size: z.number(),
-//       })
-//       .optional(),
-//     caption: z.string().optional(),
-//     voice: z
-//       .object({
-//         duration: z.number(),
-//         mime_type: z.string(),
-//         file_id: z.string(),
-//         file_unique_id: z.string(),
-//         file_size: z.number(),
-//       })
-//       .optional(),
-//     video_note: z
-//       .object({
-//         duration: z.number(),
-//         length: z.number(),
-//         thumbnail: z.any(), // correspond à [Object]
-//         thumb: z.any(), // correspond à [Object]
-//         file_id: z.string(),
-//         file_unique_id: z.string(),
-//         file_size: z.number(),
-//       })
-//       .optional(),
-//     photo: z.array(z.any()).optional(), // correspond à Photo[]
-//   }),
-// });
-
 const app = new Hono<Env>();
-
 
 app.post("/message", async (c) => {
   try {
@@ -93,7 +41,7 @@ app.post("/message", async (c) => {
     if (photoTelegram) {
       // console.log("✅ entrée dans photo");
       // console.log('dernier file_id =>', photoTelegram.at(-1)?.file_id);
-      
+
       try {
 
       const fileInfo = await ky
@@ -159,7 +107,7 @@ app.post("/message", async (c) => {
       }
     }
 
-    
+
     const humanMessage = new HumanMessage({ content: body.message.text });
 
     const responseAgent = (await agent).invoke(

@@ -1,8 +1,12 @@
 {
+  "module": "src/index.ts",
+  "type": "module",
   "name": "agent-administratif-hono",
   "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "set:telegram:dev": "tsx scripts/telegram/set-dev-webhook.ts",
     "set:telegram:prod": "tsx scripts/telegram/set-prod-webhook.ts",
     "set:google:auth": "tsx scripts/google/auth.ts",
@@ -18,20 +22,18 @@
   "dependencies": {
     "@hono/node-server": "^2.0.8",
     "@hono/zod-validator": "^0.8.0",
-    "@langchain/langgraph-checkpoint-postgres": "^1.0.3",
-    "@langchain/openai": "^1.4.7",
+    "@langchain/langgraph-checkpoint-postgres": "^1.0.4",
+    "@langchain/openai": "^1.5.5",
     "@neondatabase/serverless": "^1.1.0",
-    "@spawn/docker": "npm:@jsr/spawn__docker",
-    "better-auth": "^1.6.14",
+    "better-auth": "^1.6.23",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.12.23",
+    "hono": "^4.12.29",
     "ky": "^2.0.2",
-    "langchain": "^1.4.4",
+    "langchain": "^1.5.3",
     "node-fetch": "^3.3.2",
     "pdf-parse": "^2.4.5",
-    "pg": "^8.21.0",
-    "shelljs": "^0.10.0",
+    "pg": "^8.22.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -41,11 +43,5 @@
     "google-auth-library": "^10.9.0",
     "googleapis": "^173.0.0",
     "tsx": "^4.23.0"
-  },
-  "module": "src/index.ts",
-  "type": "module",
-  "private": true,
-  "peerDependencies": {
-    "typescript": "^7.0.1-rc"
   }
 }

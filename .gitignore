@@ -3,9 +3,3 @@ node_modules/
 .env
 
 vw-data
-
-
-# test
-docker/
-Dockerfile
-scripts
