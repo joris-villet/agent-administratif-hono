@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Copier package.json et installer prod uniquement
 COPY package.json ./
-RUN bun install --prod
+RUN bun install --production
 
 # Copier le build depuis le stage builder
 COPY --from=builder /app/dist ./dist
