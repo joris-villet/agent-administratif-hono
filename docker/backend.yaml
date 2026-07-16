@@ -1,0 +1,15 @@
+services:
+  backend:
+    container_name: backend_hono
+    build: ../.
+    ports:
+      - "7000:7000"
+    restart: always
+    env_file: "../.env"
+    volumes:
+      - "./data:/data_backend"
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
