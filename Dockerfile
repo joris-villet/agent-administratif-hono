@@ -3,10 +3,8 @@ FROM oven/bun:1-alpine AS builder
 
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires
-COPY package.json bun.lock* ./
-
-# Installer les deps avec bun
+# Copier package.json et installer
+COPY package.json ./
 RUN bun install
 
 # Copier le reste du code
@@ -20,13 +18,13 @@ FROM oven/bun:1-alpine
 
 WORKDIR /app
 
-# Copier uniquement les deps prod
-COPY package.json bun.lock* ./
-RUN bun install --production
+# Copier package.json et installer prod uniquement
+COPY package.json ./
+RUN bun install --prod
 
 # Copier le build depuis le stage builder
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 7000
 
-CMD ["node", "dist/index.js"]
+CMD ["bun", "run", "dist/index.js"]
