@@ -25,6 +25,9 @@ RUN bun install --production
 # Copier le build depuis le stage builder
 COPY --from=builder /app/dist ./dist
 
+# Copier le dossier static
+COPY --from=builder /app/static ./static
+
 EXPOSE 7000
 
 CMD ["bun", "run", "dist/index.js"]
