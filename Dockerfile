@@ -1,28 +1,28 @@
 # ---- Build stage ----
-FROM node:22-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 
 WORKDIR /app
 
 # Copier uniquement les fichiers nécessaires
-COPY package.json package-lock.json* ./
+COPY package.json bun.lockb* ./
 
-# Installer les deps (npm uniquement)
-RUN npm install
+# Installer les deps avec bun
+RUN bun install
 
 # Copier le reste du code
 COPY . .
 
 # Build TypeScript
-RUN npm run build
+RUN bun run build
 
 # ---- Production stage ----
-FROM node:22-alpine
+FROM oven/bun:1-alpine
 
 WORKDIR /app
 
 # Copier uniquement les deps prod
-COPY package.json package-lock.json* ./
-RUN npm install --omit=dev
+COPY package.json bun.lockb* ./
+RUN bun install --production
 
 # Copier le build depuis le stage builder
 COPY --from=builder /app/dist ./dist
