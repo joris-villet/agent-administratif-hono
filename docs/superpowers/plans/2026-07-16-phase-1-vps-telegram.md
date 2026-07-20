@@ -216,3 +216,43 @@ docker logs backend_hono
 | 5 | Tester HTTPS | `curl https://agent.solidweb.fr/ping` |
 | 6 | Webhook Telegram | `bun run set:telegram:prod` |
 | 7 | Test final | Envoyer un message sur Telegram |
+
+---
+
+## Problèmes résolus (16/07/2026)
+
+### Dockerfile
+- ✅ Ajout copie du dossier `static` dans l'image Docker
+
+### Réseau Docker
+- ✅ Container `backend_hono` sur le réseau `proxy`
+- ✅ Caddy configuré avec IP du container (172.18.0.2) car DNS Docker ne résout pas le nom
+
+### Ports Caddy
+- ✅ Ports 80/443 exposés après `docker compose down && docker compose up -d`
+
+### Variables d'environnement
+- ✅ Enlever les doubles quotes dans `.env` pour : `ADMIN_EMAIL`, `MODEL_NAME`, et autres variables
+- Les doubles quotes ne sont pas interprétés correctement par Docker
+
+### Agent Telegram
+- ✅ Ajout gestion d'erreur try/catch autour de l'invoke de l'agent
+- ✅ Logs ajoutés pour debug
+
+---
+
+## Phase 2: À faire (17/07/2026)
+
+### Task 1: Vérifier les checkpoints
+
+- [ ] Vérifier si les messages Telegram sont enregistrés dans les checkpoints
+- [ ] Décider si vectorisation des discussions Telegram
+
+### Task 2: Configurer Google Auth
+
+- [ ] Recréer l'authentification Google
+- [ ] Tester l'outil Google Sheets (ajout ticket de caisse par photo)
+
+### Task 3: Corriger bug TypeScript
+
+- [ ] Résoudre les erreurs TS liées aux imports Bun non reconnus par tsconfig

@@ -1,4 +1,6 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["drizzle.config.ts"],
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "ES2022",
@@ -6,6 +8,7 @@
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "rootDir": "src",
+    "baseUrl": ".",
     "strict": true,
     "skipLibCheck": true,
     "moduleDetection": "force",
